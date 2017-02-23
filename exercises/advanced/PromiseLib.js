@@ -15,7 +15,16 @@ var Promise = require('bluebird');
  */
 
 var promisify = function(nodeStyleFn) {
- // TODO
+  return function(...args) {
+    return new Promise((resolve, reject) => {
+      nodeStyleFn(...args, (err, ...callbackArgs) => {
+        if (err) {
+          return reject(err);
+        } 
+        return resolve(...callbackArgs);
+      });
+    });
+  };
 };
 
 
@@ -31,7 +40,28 @@ var promisify = function(nodeStyleFn) {
  */
 
 var all = function(arrayOfPromises) {
-  // TODO
+  return new Promise((resolve, reject) => {
+    var resolvedPromises = [];
+    var numPromises = arrayOfPromises.length;
+    var counter = 0;
+
+    arrayOfPromises.forEach((promise, index) => {
+      promise
+        .then(
+
+          //on success
+          res => {
+            resolvedPromises[index] = res;
+            if (++counter === numPromises) {
+              resolve(resolvedPromises);
+            }
+          }, 
+
+          //on error
+          rej => reject(rej)
+        );
+    });
+  }); 
 };
 
 

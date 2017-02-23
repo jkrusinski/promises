@@ -18,9 +18,7 @@ Promise.promisifyAll(fs);
 var fetchProfileAndWriteToFile = function(readFilePath, writeFilePath) {
   return pluckFirst(readFilePath)
     .then(username => getGithub(username))
-    .then(profile => {
-      fs.writeFileAsync(writeFilePath, JSON.stringify(profile), 'utf8');
-    });
+    .then(profile => fs.writeFileAsync(writeFilePath, JSON.stringify(profile), 'utf8'));
 };
 
 
